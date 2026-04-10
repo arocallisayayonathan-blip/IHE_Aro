@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IHE – Integrating the Healthcare Enterprise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --teal:  #0d9488;
+      --blue:  #0369a1;
+      --mint:  #ccfbf1;
+      --sky:   #e0f2fe;
+      --dark:  #0f2535;
+    }
+    * { box-sizing: border-box; scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #f8fdfc; color: #1e3a47; }
+    h1,h2,h3,h4 { font-family: 'Sora', sans-serif; }
+
+    /* ── Navbar ── */
+    #navbar { backdrop-filter: blur(14px); background: rgba(255,255,255,.88); }
+    .nav-link { transition: color .2s; }
+    .nav-link:hover { color: var(--teal); }
+
+    /* ── Hero ── */
+    #hero {
+      background: linear-gradient(135deg, #0f2535 0%, #0369a1 50%, #0d9488 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content:'';
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(13,148,136,.4) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(3,105,161,.3) 0%, transparent 50%);
+    }
+    .hero-blob {
+      position:absolute; border-radius:50%; opacity:.12; filter:blur(60px);
+    }
+    .pulse-ring {
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform:scale(1); opacity:.6; }
+      50%      { transform:scale(1.08); opacity:1; }
+    }
+
+    /* ── Sections ── */
+    .section-tag {
+      display:inline-block; font-size:.75rem; font-weight:600; letter-spacing:.12em;
+      text-transform:uppercase; color:var(--teal);
+      background:var(--mint); padding:.25rem .75rem; border-radius:99px; margin-bottom:1rem;
+    }
+
+    /* ── Timeline ── */
+    .tl-dot {
+      width:14px; height:14px; border-radius:50%;
+      background:var(--teal); flex-shrink:0; margin-top:4px;
+      box-shadow: 0 0 0 4px #ccfbf1;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background:#fff; border-radius:1.25rem;
+      box-shadow: 0 2px 24px rgba(13,148,136,.08);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .card:hover { transform:translateY(-6px); box-shadow:0 12px 40px rgba(13,148,136,.15); }
+
+    /* ── Step number ── */
+    .step-num {
+      width:2.5rem; height:2.5rem; border-radius:50%;
+      background: linear-gradient(135deg,#0369a1,#0d9488);
+      color:#fff; font-family:'Sora',sans-serif; font-weight:700; font-size:1rem;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+
+    /* ── Table ── */
+    .comp-table th { background: linear-gradient(135deg,#0369a1,#0d9488); color:#fff; }
+    .comp-table tr:nth-child(even) td { background:#f0fdfa; }
+
+    /* ── Fade-in on scroll ── */
+    .reveal { opacity:0; transform:translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+
+    /* ── Footer ── */
+    footer { background: var(--dark); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 shadow-sm">
+  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+    <span class="font-bold text-lg" style="font-family:'Sora',sans-serif; color:var(--teal)">IHE<span class="text-sky-600">·edu</span></span>
+    <div class="hidden md:flex gap-6 text-sm font-medium text-slate-600">
+      <a href="#que-es"     class="nav-link">¿Qué es?</a>
+      <a href="#historia"   class="nav-link">Historia</a>
+      <a href="#problema"   class="nav-link">Problema</a>
+      <a href="#como"       class="nav-link">¿Cómo funciona?</a>
+      <a href="#beneficios" class="nav-link">Beneficios</a>
+      <a href="#bolivia"    class="nav-link">Bolivia</a>
+    </div>
+    <a href="#conclusion" class="hidden md:inline-block text-sm font-semibold text-white px-4 py-2 rounded-full" style="background:var(--teal)">Saber más</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section id="hero" class="flex items-center justify-center text-white text-center px-6 pt-20">
+  <!-- blobs -->
+  <div class="hero-blob" style="width:500px;height:500px;background:#0d9488;top:-100px;right:-150px;"></div>
+  <div class="hero-blob" style="width:350px;height:350px;background:#0369a1;bottom:-80px;left:-100px;"></div>
+
+  <div class="relative z-10 max-w-3xl mx-auto py-24">
+
+    <!-- Icon cluster -->
+    <div class="flex justify-center gap-6 mb-10">
+      <div class="pulse-ring p-4 rounded-2xl" style="background:rgba(255,255,255,.12)">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+      </div>
+      <div class="p-4 rounded-2xl" style="background:rgba(255,255,255,.12)">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>
+      </div>
+      <div class="pulse-ring p-4 rounded-2xl" style="background:rgba(255,255,255,.12)">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+    </div>
+
+    <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase mb-6" style="background:rgba(204,251,241,.2); color:#ccfbf1">Estándar global de salud digital</div>
+
+    <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+      Conectando<br><span style="color:#5eead4">la salud</span><br>del mundo
+    </h1>
+    <p class="text-xl md:text-2xl font-light opacity-85 max-w-xl mx-auto mb-10">
+      IHE hace que los sistemas de salud <strong>hablen el mismo idioma</strong>, sin importar el hospital ni el país.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#que-es" class="px-8 py-4 rounded-full font-semibold text-lg" style="background:#0d9488">Explorar →</a>
+      <a href="#bolivia" class="px-8 py-4 rounded-full font-semibold text-lg border-2 border-white/40 hover:bg-white/10 transition">Bolivia & IHE</a>
+    </div>
+
+    <!-- scroll hint -->
+    <div class="mt-16 flex justify-center opacity-50 animate-bounce">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S1: ¿QUÉ ES IHE?
+══════════════════════════════════════ -->
+<section id="que-es" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <span class="section-tag">Sección 1</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-2">¿Qué es IHE?</h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Text -->
+      <div class="reveal">
+        <p class="text-2xl font-light leading-relaxed mb-6">
+          <span class="font-semibold" style="color:var(--teal)">IHE</span> = <em>Integrating the Healthcare Enterprise</em>
+        </p>
+        <p class="text-lg text-slate-600 leading-relaxed mb-6">
+          Es una <strong>iniciativa global</strong> que establece reglas claras para que los sistemas de salud —laboratorios, radiología, farmacia, historiales— se conecten y compartan datos sin errores.
+        </p>
+        <div class="flex gap-4 flex-wrap">
+          <span class="px-4 py-2 rounded-full text-sm font-medium" style="background:var(--mint); color:var(--teal)">🏥 Hospitales</span>
+          <span class="px-4 py-2 rounded-full text-sm font-medium" style="background:var(--sky); color:var(--blue)">🌐 15+ países</span>
+          <span class="px-4 py-2 rounded-full text-sm font-medium bg-purple-50 text-purple-700">📋 DICOM · HL7</span>
+        </div>
+      </div>
+
+      <!-- Diagram: DICOM → PACS → Cloud → Doctor -->
+      <div class="reveal">
+        <div class="card p-6">
+          <p class="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest mb-6">Flujo de información médica</p>
+          <div class="flex items-center justify-between gap-2">
+
+            <!-- DICOM -->
+            <div class="flex flex-col items-center gap-2 flex-1">
+              <div class="w-14 h-14 rounded-xl flex items-center justify-center" style="background:var(--sky)">
+                <svg class="w-8 h-8" style="color:var(--blue)" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">DICOM</span>
+              <span class="text-xs text-slate-400 text-center">Imagen médica</span>
+            </div>
+
+            <svg class="w-6 h-6 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+
+            <!-- PACS -->
+            <div class="flex flex-col items-center gap-2 flex-1">
+              <div class="w-14 h-14 rounded-xl flex items-center justify-center" style="background:#fdf4ff">
+                <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">PACS</span>
+              <span class="text-xs text-slate-400 text-center">Servidor local</span>
+            </div>
+
+            <svg class="w-6 h-6 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+
+            <!-- Cloud -->
+            <div class="flex flex-col items-center gap-2 flex-1">
+              <div class="w-14 h-14 rounded-xl flex items-center justify-center" style="background:var(--mint)">
+                <svg class="w-8 h-8" style="color:var(--teal)" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">Nube IHE</span>
+              <span class="text-xs text-slate-400 text-center">Intercambio</span>
+            </div>
+
+            <svg class="w-6 h-6 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+
+            <!-- Doctor -->
+            <div class="flex flex-col items-center gap-2 flex-1">
+              <div class="w-14 h-14 rounded-xl flex items-center justify-center bg-green-50">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">Doctor</span>
+              <span class="text-xs text-slate-400 text-center">Decisión</span>
+            </div>
+          </div>
+          <div class="mt-4 text-center text-xs text-slate-400">Todo conectado · Todo seguro · Todo estándar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S2: HISTORIA
+══════════════════════════════════════ -->
+<section id="historia" class="py-28 px-6" style="background:linear-gradient(180deg,#f0fdfa 0%,#f8fdfc 100%)">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <span class="section-tag">Sección 2</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-2">¿De dónde viene IHE?</h2>
+    </div>
+
+    <!-- Timeline vertical -->
+    <div class="space-y-0 reveal">
+
+      <!-- 1998 -->
+      <div class="flex gap-6 items-start pb-10 relative">
+        <div class="flex flex-col items-center">
+          <div class="tl-dot"></div>
+          <div class="w-0.5 flex-1 mt-2" style="background:linear-gradient(180deg,var(--teal),var(--blue))"></div>
+        </div>
+        <div class="card p-6 flex-1 mb-0">
+          <div class="text-2xl font-extrabold mb-1" style="color:var(--teal)">1998</div>
+          <div class="font-semibold text-lg mb-1">Nace IHE 🎉</div>
+          <p class="text-slate-500">La <strong>RSNA</strong> (Radiología) y <strong>HIMSS</strong> (Informática de Salud) se unen para crear un estándar común.</p>
+        </div>
+      </div>
+
+      <!-- 2002 -->
+      <div class="flex gap-6 items-start pb-10 relative">
+        <div class="flex flex-col items-center">
+          <div class="tl-dot"></div>
+          <div class="w-0.5 flex-1 mt-2" style="background:linear-gradient(180deg,var(--blue),#8b5cf6)"></div>
+        </div>
+        <div class="card p-6 flex-1">
+          <div class="text-2xl font-extrabold mb-1" style="color:var(--blue)">2002</div>
+          <div class="font-semibold text-lg mb-1">Primer Connectathon 🔬</div>
+          <p class="text-slate-500">Los fabricantes de software se reúnen a probar si sus sistemas realmente se conectan.</p>
+        </div>
+      </div>
+
+      <!-- 2010 -->
+      <div class="flex gap-6 items-start pb-10 relative">
+        <div class="flex flex-col items-center">
+          <div class="tl-dot"></div>
+          <div class="w-0.5 flex-1 mt-2" style="background:linear-gradient(180deg,#8b5cf6,#ec4899)"></div>
+        </div>
+        <div class="card p-6 flex-1">
+          <div class="text-2xl font-extrabold mb-1 text-purple-600">2010</div>
+          <div class="font-semibold text-lg mb-1">Expansión global 🌍</div>
+          <p class="text-slate-500">Europa, Japón, Canadá y América Latina adoptan los perfiles IHE en sus políticas de salud.</p>
+        </div>
+      </div>
+
+      <!-- Hoy -->
+      <div class="flex gap-6 items-start">
+        <div class="flex flex-col items-center">
+          <div class="tl-dot" style="background:#ec4899;box-shadow:0 0 0 4px #fce7f3"></div>
+        </div>
+        <div class="card p-6 flex-1 border-2" style="border-color:var(--teal)">
+          <div class="text-2xl font-extrabold mb-1 text-pink-500">Hoy</div>
+          <div class="font-semibold text-lg mb-1">+15 países activos 🚀</div>
+          <p class="text-slate-500">Miles de hospitales y clínicas en todo el mundo usan perfiles IHE cada día.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S3: PROBLEMA / SOLUCIÓN
+══════════════════════════════════════ -->
+<section id="problema" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <span class="section-tag">Sección 3</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-2">El problema y la solución</h2>
+      <p class="text-slate-500 mt-3 text-lg">¿Qué pasa sin IHE? ¿Y con IHE?</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 reveal">
+
+      <!-- ANTES -->
+      <div class="rounded-2xl p-8 border-2 border-red-100" style="background:#fff5f5">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+            <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"/></svg>
+          </div>
+          <span class="text-xl font-bold text-red-600">ANTES de IHE</span>
+        </div>
+
+        <!-- Disconnected icons -->
+        <div class="flex justify-center gap-4 mb-6 opacity-70">
+          <div class="w-12 h-12 rounded-xl bg-red-50 border-2 border-red-200 flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          </div>
+          <div class="flex items-center"><svg class="w-5 h-5 text-red-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"/></svg></div>
+          <div class="w-12 h-12 rounded-xl bg-red-50 border-2 border-red-200 flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="flex items-center"><svg class="w-5 h-5 text-red-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"/></svg></div>
+          <div class="w-12 h-12 rounded-xl bg-red-50 border-2 border-red-200 flex items-center justify-center">
+            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+          </div>
+        </div>
+
+        <ul class="space-y-3 text-slate-700">
+          <li class="flex gap-2 items-start"><span class="text-red-400 mt-0.5">✗</span> Sistemas que no se comunican</li>
+          <li class="flex gap-2 items-start"><span class="text-red-400 mt-0.5">✗</span> El paciente repite exámenes costosos</li>
+          <li class="flex gap-2 items-start"><span class="text-red-400 mt-0.5">✗</span> Errores por información duplicada</li>
+          <li class="flex gap-2 items-start"><span class="text-red-400 mt-0.5">✗</span> Tiempo y dinero perdidos</li>
+        </ul>
+      </div>
+
+      <!-- DESPUÉS -->
+      <div class="rounded-2xl p-8 border-2 border-teal-100" style="background:#f0fdfa">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background:var(--mint)">
+            <svg class="w-7 h-7" style="color:var(--teal)" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="text-xl font-bold" style="color:var(--teal)">CON IHE</span>
+        </div>
+
+        <!-- Connected icons -->
+        <div class="flex justify-center gap-2 mb-6">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:var(--mint)">
+            <svg class="w-6 h-6" style="color:var(--teal)" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          </div>
+          <div class="flex items-center">
+            <div class="h-0.5 w-8" style="background:var(--teal)"></div>
+            <svg class="w-4 h-4" style="color:var(--teal)" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:var(--mint)">
+            <svg class="w-6 h-6" style="color:var(--teal)" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="flex items-center">
+            <div class="h-0.5 w-8" style="background:var(--teal)"></div>
+            <svg class="w-4 h-4" style="color:var(--teal)" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:var(--mint)">
+            <svg class="w-6 h-6" style="color:var(--teal)" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+          </div>
+        </div>
+
+        <ul class="space-y-3 text-slate-700">
+          <li class="flex gap-2 items-start"><span style="color:var(--teal)" class="mt-0.5">✓</span> Información fluye automática y segura</li>
+          <li class="flex gap-2 items-start"><span style="color:var(--teal)" class="mt-0.5">✓</span> Un solo historial del paciente</li>
+          <li class="flex gap-2 items-start"><span style="color:var(--teal)" class="mt-0.5">✓</span> Menos errores médicos</li>
+          <li class="flex gap-2 items-start"><span style="color:var(--teal)" class="mt-0.5">✓</span> Atención más rápida y económica</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S4: CÓMO FUNCIONA
+══════════════════════════════════════ -->
+<section id="como" class="py-28 px-6" style="background:linear-gradient(180deg,#f0fdfa 0%,#e0f2fe 100%)">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <span class="section-tag">Sección 4</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-2">El ciclo simple de IHE</h2>
+      <p class="text-slate-500 mt-3 text-lg">4 pasos del estándar al hospital</p>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6 reveal">
+
+      <!-- Paso 1 -->
+      <div class="card p-6 text-center">
+        <div class="flex justify-center mb-4">
+          <div class="step-num">1</div>
+        </div>
+        <div class="text-4xl mb-3">🔍</div>
+        <h4 class="font-bold mb-2">Identificar necesidad</h4>
+        <p class="text-sm text-slate-500">Hospitales reportan un problema de integración real.</p>
+      </div>
+
+      <!-- Paso 2 -->
+      <div class="card p-6 text-center">
+        <div class="flex justify-center mb-4">
+          <div class="step-num">2</div>
+        </div>
+        <div class="text-4xl mb-3">📋</div>
+        <h4 class="font-bold mb-2">Crear Perfil</h4>
+        <p class="text-sm text-slate-500">Expertos diseñan un "perfil de integración" con reglas claras.</p>
+      </div>
+
+      <!-- Paso 3 -->
+      <div class="card p-6 text-center">
+        <div class="flex justify-center mb-4">
+          <div class="step-num">3</div>
+        </div>
+        <div class="text-4xl mb-3">🧪</div>
+        <h4 class="font-bold mb-2">Connectathon</h4>
+        <p class="text-sm text-slate-500">Los proveedores prueban si sus sistemas siguen el perfil.</p>
+      </div>
+
+      <!-- Paso 4 -->
+      <div class="card p-6 text-center">
+        <div class="flex justify-center mb-4">
+          <div class="step-num">4</div>
+        </div>
+        <div class="text-4xl mb-3">🏥</div>
+        <h4 class="font-bold mb-2">Usar en hospitales</h4>
+        <p class="text-sm text-slate-500">El perfil aprobado se implementa en clínicas de todo el mundo.</p>
+      </div>
+    </div>
+
+    <!-- Flowchart simple -->
+    <div class="mt-12 card p-6 reveal">
+      <p class="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest mb-6">Diagrama de flujo</p>
+      <div class="flex flex-col md:flex-row items-center justify-center gap-2">
+        <div class="px-4 py-2 rounded-lg text-sm font-semibold text-white text-center" style="background:var(--blue)">Problema clínico</div>
+        <svg class="w-5 h-5 text-slate-300 rotate-90 md:rotate-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <div class="px-4 py-2 rounded-lg text-sm font-semibold text-white text-center" style="background:#7c3aed">Comité técnico</div>
+        <svg class="w-5 h-5 text-slate-300 rotate-90 md:rotate-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <div class="px-4 py-2 rounded-lg text-sm font-semibold text-white text-center" style="background:#d97706">Perfil IHE</div>
+        <svg class="w-5 h-5 text-slate-300 rotate-90 md:rotate-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <div class="px-4 py-2 rounded-lg text-sm font-semibold text-white text-center" style="background:#dc2626">Connectathon</div>
+        <svg class="w-5 h-5 text-slate-300 rotate-90 md:rotate-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <div class="px-4 py-2 rounded-lg text-sm font-semibold text-white text-center" style="background:var(--teal)">Hospitales 🎉</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S5: BENEFICIOS
+══════════════════════════════════════ -->
+<section id="beneficios" class="py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <span class="section-tag">Sección 5</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-2">Beneficios clave</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 reveal">
+
+      <div class="card p-8 text-center">
+        <div class="text-5xl mb-4">❤️</div>
+        <h4 class="font-bold text-lg mb-2">Mejor atención</h4>
+        <p class="text-slate-500 text-sm">El médico tiene toda la info del paciente al instante.</p>
+      </div>
+
+      <div class="card p-8 text-center">
+        <div class="text-5xl mb-4">🎯</div>
+        <h4 class="font-bold text-lg mb-2">Menos errores</h4>
+        <p class="text-slate-500 text-sm">Datos correctos y actualizados en cada consulta.</p>
+      </div>
+
+      <div class="card p-8 text-center">
+        <div class="text-5xl mb-4">⏱️</div>
+        <h4 class="font-bold text-lg mb-2">Ahorro de tiempo</h4>
+        <p class="text-slate-500 text-sm">Sin esperas ni repetición de exámenes innecesarios.</p>
+      </div>
+
+      <div class="card p-8 text-center">
+        <div class="text-5xl mb-4">📁</div>
+        <h4 class="font-bold text-lg mb-2">Historial único</h4>
+        <p class="text-slate-500 text-sm">Un solo expediente digital accesible desde cualquier lugar.</p>
+      </div>
+
+      <div class="card p-8 text-center">
+        <div class="text-5xl mb-4">🔄</div>
+        <h4 class="font-bold text-lg mb-2">Intercambio fácil</h4>
+        <p class="text-slate-500 text-sm">Cualquier hospital puede leer los datos de otro.</p>
+      </div>
+
+      <div class="card p-8 text-center">
+        <div class="text-5xl mb-4">💰</div>
+        <h4 class="font-bold text-lg mb-2">Ahorro económico</h4>
+        <p class="text-slate-500 text-sm">Menos duplicaciones = menos costos para el sistema de salud.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S6: BOLIVIA
+══════════════════════════════════════ -->
+<section id="bolivia" class="py-28 px-6" style="background:linear-gradient(135deg,#0f2535 0%,#0369a1 100%)">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase mb-4" style="background:rgba(204,251,241,.2);color:#ccfbf1">Sección 6</span>
+      <h2 class="text-4xl md:text-5xl font-bold text-white mt-2">IHE y Telesalud en Bolivia 🇧🇴</h2>
+      <p class="mt-3 text-lg" style="color:#93c5fd">¿Cómo se relacionan?</p>
+    </div>
+
+    <!-- Tabla comparativa -->
+    <div class="reveal overflow-x-auto rounded-2xl shadow-2xl">
+      <table class="comp-table w-full text-sm">
+        <thead>
+          <tr>
+            <th class="px-6 py-4 text-left font-semibold">Aspecto</th>
+            <th class="px-6 py-4 text-left font-semibold">IHE</th>
+            <th class="px-6 py-4 text-left font-semibold">Telesalud Bolivia</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white">
+          <tr>
+            <td class="px-6 py-4 font-medium text-slate-700">🎯 Enfoque</td>
+            <td class="px-6 py-4 text-slate-600">Integración técnica de sistemas</td>
+            <td class="px-6 py-4 text-slate-600">Teleconsultas y atención remota</td>
+          </tr>
+          <tr>
+            <td class="px-6 py-4 font-medium text-slate-700">📋 Estándares</td>
+            <td class="px-6 py-4 text-slate-600">DICOM, HL7, perfiles técnicos</td>
+            <td class="px-6 py-4 text-slate-600">Video + datos básicos del paciente</td>
+          </tr>
+          <tr>
+            <td class="px-6 py-4 font-medium text-slate-700">🏥 Uso principal</td>
+            <td class="px-6 py-4 text-slate-600">Todo el hospital (laboratorio, radiología…)</td>
+            <td class="px-6 py-4 text-slate-600">Zonas rurales principalmente</td>
+          </tr>
+          <tr>
+            <td class="px-6 py-4 font-medium text-slate-700">🌐 Alcance</td>
+            <td class="px-6 py-4 text-slate-600">Internacional (15+ países)</td>
+            <td class="px-6 py-4 text-slate-600">Nacional (Bolivia)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Conclusión -->
+    <div class="mt-10 text-center reveal">
+      <div class="inline-block rounded-2xl px-8 py-6 max-w-2xl" style="background:rgba(255,255,255,.1)">
+        <p class="text-xl font-semibold text-white mb-2">💡 ¡Sería ideal combinarlos!</p>
+        <p style="color:#93c5fd" class="text-lg">Telesalud lleva la atención a zonas remotas. IHE garantiza que los datos viajen seguros y ordenados. Juntos = salud digital completa para Bolivia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     S7: CONCLUSIÓN
+══════════════════════════════════════ -->
+<section id="conclusion" class="py-28 px-6 text-center">
+  <div class="max-w-3xl mx-auto reveal">
+    <span class="section-tag">Conclusión</span>
+    <h2 class="text-4xl md:text-5xl font-bold mt-2 mb-6">IHE: el lenguaje común de la salud</h2>
+    <p class="text-xl text-slate-600 leading-relaxed mb-10">
+      Con IHE, hospitales de todo el mundo comparten información de forma segura, rápida y estandarizada.<br>
+      <strong>Mejor tecnología = mejor atención = más vidas salvadas.</strong>
+    </p>
+    <div class="text-6xl mb-10">🌍❤️🏥</div>
+    <a href="https://www.ihe.net" target="_blank"
+       class="inline-block px-10 py-5 rounded-full text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+       style="background:linear-gradient(135deg,var(--blue),var(--teal))">
+      ¿Quieres saber más? → ihe.net
+    </a>
+
+    <!-- Aro button -->
+    <div class="flex justify-end mt-10" style="padding-right:1rem;">
+      <button onclick="openMindMap()" id="aroBtn">
+        <span class="aro-ring aro-ring-1"></span>
+        <span class="aro-ring aro-ring-2"></span>
+        <span class="aro-ring aro-ring-3"></span>
+        <span class="aro-inner">
+          <span class="aro-emoji">👀</span>
+          <span class="aro-text">Aro</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     MODAL: MAPA CONCEPTUAL
+══════════════════════════════════════ -->
+<div id="mindMapModal"
+  style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(15,37,53,.92); backdrop-filter:blur(8px); overflow-y:auto;"
+  onclick="closeMindMapOutside(event)">
+  <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem;">
+    <div id="mindMapBox"
+      style="background:linear-gradient(135deg,#0f2535 0%,#0c2240 60%,#0d3a30 100%);
+             border-radius:2rem; padding:3rem 2rem; max-width:860px; width:100%;
+             border:1px solid rgba(13,148,136,.3); box-shadow:0 30px 80px rgba(0,0,0,.6); position:relative;">
+
+      <!-- Close -->
+      <button onclick="closeMindMap()"
+        style="position:absolute;top:1.2rem;right:1.4rem; background:rgba(255,255,255,.08); border:none; color:#93c5fd;
+               font-size:1.5rem; cursor:pointer; border-radius:50%; width:2.4rem; height:2.4rem;
+               display:flex;align-items:center;justify-content:center; transition:.2s;"
+        onmouseover="this.style.background='rgba(255,255,255,.18)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">✕</button>
+
+      <!-- Title -->
+      <h2 style="font-family:'Sora',sans-serif; font-size:clamp(1.8rem,5vw,2.8rem); font-weight:800;
+                 text-align:center; color:#fff; margin-bottom:.5rem; letter-spacing:-.02em;">
+        Características clave
+      </h2>
+      <p style="text-align:center; color:#5eead4; font-size:.9rem; margin-bottom:2.5rem;">
+        Toca cada nodo para explorar
+      </p>
+
+      <!-- Mind Map SVG + Nodes -->
+      <div style="position:relative; width:100%; max-width:700px; margin:0 auto; aspect-ratio:1/1;">
+
+        <!-- SVG lines -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;" viewBox="0 0 700 700" preserveAspectRatio="xMidYMid meet">
+          <!-- lines from center (350,350) to each node -->
+          <line x1="350" y1="350" x2="350" y2="80"  stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+          <line x1="350" y1="350" x2="590" y2="175" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+          <line x1="350" y1="350" x2="620" y2="390" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+          <line x1="350" y1="350" x2="490" y2="600" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+          <line x1="350" y1="350" x2="210" y2="600" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+          <line x1="350" y1="350" x2="80"  y2="390" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+          <line x1="350" y1="350" x2="110" y2="175" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+          <line x1="350" y1="350" x2="350" y2="600" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4" opacity=".7"/>
+        </svg>
+
+        <!-- CENTER node -->
+        <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+                    width:110px; height:110px; border-radius:50%;
+                    background:linear-gradient(135deg,#0369a1,#0d9488);
+                    display:flex;flex-direction:column;align-items:center;justify-content:center;
+                    box-shadow:0 0 40px rgba(13,148,136,.5); z-index:10; border:3px solid #5eead4;">
+          <span style="font-size:1.6rem;">🏥</span>
+          <span style="font-family:'Sora',sans-serif;font-size:.6rem;font-weight:700;color:#fff;text-align:center;margin-top:.2rem;line-height:1.2;">IHE</span>
+        </div>
+
+        <!-- NODE macro — positions as % -->
+        <!-- 0: Interoperabilidad  top center -->
+        <button onclick="openNode(0)" class="mm-node" style="left:50%;top:2%;transform:translateX(-50%)">
+          <span class="mm-emoji">🌐</span><span class="mm-label">Interoperabilidad</span>
+        </button>
+        <!-- 1: Perfiles  top right -->
+        <button onclick="openNode(1)" class="mm-node" style="left:76%;top:16%;transform:translateX(-50%)">
+          <span class="mm-emoji">📋</span><span class="mm-label">Perfiles técnicos</span>
+        </button>
+        <!-- 2: Connectathon  right -->
+        <button onclick="openNode(2)" class="mm-node" style="left:84%;top:50%;transform:translate(-50%,-50%)">
+          <span class="mm-emoji">🧪</span><span class="mm-label">Connectathon</span>
+        </button>
+        <!-- 3: Dominios  bottom right -->
+        <button onclick="openNode(3)" class="mm-node" style="left:68%;top:80%;transform:translateX(-50%)">
+          <span class="mm-emoji">📂</span><span class="mm-label">Dominios</span>
+        </button>
+        <!-- 4: Beneficios  bottom center -->
+        <button onclick="openNode(4)" class="mm-node" style="left:50%;top:82%;transform:translateX(-50%)">
+          <span class="mm-emoji">💡</span><span class="mm-label">Beneficios</span>
+        </button>
+        <!-- 5: Colaboración  bottom left -->
+        <button onclick="openNode(5)" class="mm-node" style="left:32%;top:80%;transform:translateX(-50%)">
+          <span class="mm-emoji">🌍</span><span class="mm-label">Colaboración</span>
+        </button>
+        <!-- 6: Seguridad  left -->
+        <button onclick="openNode(6)" class="mm-node" style="left:16%;top:50%;transform:translate(-50%,-50%)">
+          <span class="mm-emoji">🔒</span><span class="mm-label">Seguridad</span>
+        </button>
+        <!-- 7: Escalabilidad  top left -->
+        <button onclick="openNode(7)" class="mm-node" style="left:24%;top:16%;transform:translateX(-50%)">
+          <span class="mm-emoji">📈</span><span class="mm-label">Escalabilidad</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL: DETALLE DE NODO
+══════════════════════════════════════ -->
+<div id="nodeModal"
+  style="display:none; position:fixed; inset:0; z-index:2000; background:rgba(10,25,40,.94); backdrop-filter:blur(10px);
+         display:none; align-items:center; justify-content:center; padding:1.5rem;">
+  <div id="nodeBox"
+    style="background:#fff; border-radius:1.75rem; padding:2.5rem; max-width:560px; width:100%;
+           box-shadow:0 40px 100px rgba(0,0,0,.4); position:relative; max-height:90vh; overflow-y:auto;">
+
+    <button onclick="closeNode()"
+      style="position:absolute;top:1rem;right:1.2rem; background:#f0fdfa; border:none; color:#0d9488;
+             font-size:1.4rem; cursor:pointer; border-radius:50%; width:2.2rem; height:2.2rem;
+             display:flex;align-items:center;justify-content:center; font-weight:700;"
+      onmouseover="this.style.background='#ccfbf1'" onmouseout="this.style.background='#f0fdfa'">✕</button>
+
+    <div id="nodeEmoji" style="font-size:3.5rem; text-align:center; margin-bottom:1rem;"></div>
+    <h3 id="nodeTitle" style="font-family:'Sora',sans-serif; font-size:1.7rem; font-weight:800;
+                               text-align:center; color:#0f2535; margin-bottom:1.5rem;"></h3>
+    <div id="nodeContent" style="color:#334155; font-size:1rem; line-height:1.75;"></div>
+
+    <div class="flex justify-center gap-3 mt-6 flex-wrap">
+      <button onclick="closeNode()"
+        style="background:linear-gradient(135deg,#0369a1,#0d9488); color:#fff;
+               border:none; padding:.75rem 1.75rem; border-radius:99px; font-weight:600; cursor:pointer; font-size:.9rem; display:flex; align-items:center; gap:.4rem;">
+        ← Volver al mapa
+      </button>
+      <button onclick="closeNode(); closeMindMap();"
+        style="background:#f0fdfa; color:#0d9488; border:2px solid #0d9488;
+               padding:.75rem 1.75rem; border-radius:99px; font-weight:600; cursor:pointer; font-size:.9rem; display:flex; align-items:center; gap:.4rem; transition:.2s;"
+        onmouseover="this.style.background='#ccfbf1'" onmouseout="this.style.background='#f0fdfa'">
+        🏠 Plantilla principal
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .mm-node {
+    position:absolute;
+    display:flex; flex-direction:column; align-items:center; gap:.3rem;
+    background:rgba(255,255,255,.06);
+    border:2px solid rgba(13,148,136,.4);
+    border-radius:1rem; padding:.6rem .75rem;
+    cursor:pointer; transition:all .2s;
+    width:90px;
+    color:#fff;
+  }
+  .mm-node:hover {
+    background:rgba(13,148,136,.25);
+    border-color:#5eead4;
+    transform:translateX(-50%) scale(1.1) !important;
+    box-shadow:0 8px 30px rgba(13,148,136,.4);
+  }
+  /* nodes that use translate(-50%,-50%) need different hover */
+  .mm-node[style*="translate(-50%,-50%)"] { transform:translate(-50%,-50%) !important; }
+  .mm-node[style*="translate(-50%,-50%)"]:hover { transform:translate(-50%,-50%) scale(1.1) !important; }
+
+  .mm-emoji { font-size:1.8rem; line-height:1; }
+  .mm-label { font-size:.58rem; font-weight:600; text-align:center; line-height:1.2; color:#93c5fd; font-family:'DM Sans',sans-serif; }
+
+  #nodeModal { display:none; }
+  #nodeModal.open { display:flex; }
+
+  /* ── Aro button ── */
+  #aroBtn {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    width: 90px; height: 90px; border-radius: 50%;
+    border: none; background: transparent; cursor: pointer; outline: none;
+  }
+  .aro-ring {
+    position: absolute; border-radius: 50%;
+    border: 2px solid rgba(13,148,136,.5);
+    width: 100%; height: 100%;
+    animation: aroExpand 2.4s ease-out infinite;
+    pointer-events: none;
+  }
+  .aro-ring-1 { animation-delay: 0s; }
+  .aro-ring-2 { animation-delay: .8s; }
+  .aro-ring-3 { animation-delay: 1.6s; }
+  @keyframes aroExpand {
+    0%   { transform:scale(1);   opacity:.8; border-color:rgba(13,148,136,.7); }
+    100% { transform:scale(2.4); opacity:0;  border-color:rgba(94,234,212,.05); }
+  }
+  .aro-inner {
+    position: relative; z-index: 2;
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, #0f2535 0%, #0369a1 55%, #0d9488 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px;
+    box-shadow: 0 0 22px rgba(13,148,136,.65), 0 0 55px rgba(3,105,161,.3), inset 0 1px 0 rgba(255,255,255,.15);
+    border: 2px solid rgba(94,234,212,.5);
+    transition: transform .25s, box-shadow .25s;
+  }
+  #aroBtn:hover .aro-inner {
+    transform: scale(1.13);
+    box-shadow: 0 0 38px rgba(13,148,136,.95), 0 0 85px rgba(3,105,161,.5), inset 0 1px 0 rgba(255,255,255,.2);
+  }
+  .aro-emoji { font-size: 1.5rem; line-height: 1; animation: aroBlink 3s ease-in-out infinite; }
+  @keyframes aroBlink {
+    0%,100% { transform: scale(1) rotate(0deg); }
+    50%      { transform: scale(1.25) rotate(-10deg); }
+  }
+  .aro-text {
+    font-family: 'Sora', sans-serif; font-size: .55rem; font-weight: 700;
+    color: #ccfbf1; letter-spacing: .1em; text-transform: uppercase;
+  }
+</style>
+
+<script>
+const NODES = [
+  {
+    emoji: '🌐',
+    title: 'Interoperabilidad',
+    content: `
+      <ul style="list-style:none;padding:0;space-y:.75rem;display:flex;flex-direction:column;gap:.75rem;">
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;font-size:1.2rem;flex-shrink:0">•</span>IHE no inventa nuevos lenguajes, sino que <strong>coordina el uso de estándares existentes</strong> como HL7, DICOM, FHIR, CDA, entre otros.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;font-size:1.2rem;flex-shrink:0">•</span>Define cómo deben aplicarse estos estándares en <strong>casos clínicos concretos</strong>, evitando interpretaciones distintas entre proveedores.</li>
+      </ul>`
+  },
+  {
+    emoji: '📋',
+    title: 'Perfiles Técnicos',
+    content: `
+      <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.75rem;">
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Cada perfil describe un <strong>escenario clínico</strong> y cómo los sistemas deben comunicarse en ese contexto.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span><div><strong>Ejemplos:</strong><br/>
+          <span style="display:block;margin-top:.4rem;padding:.5rem .75rem;background:#f0fdfa;border-radius:.5rem;margin-bottom:.3rem;">📁 <strong>XDS.b</strong>: Compartir documentos clínicos entre instituciones.</span>
+          <span style="display:block;padding:.5rem .75rem;background:#f0fdfa;border-radius:.5rem;margin-bottom:.3rem;">🆔 <strong>PIX/PDQ</strong>: Gestión de identidades de pacientes.</span>
+          <span style="display:block;padding:.5rem .75rem;background:#f0fdfa;border-radius:.5rem;">🩻 <strong>RAD</strong>: Integración de imágenes médicas en radiología.</span>
+        </div></li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Son como <strong>"manuales de uso"</strong> que garantizan que todos los sistemas sigan las mismas reglas.</li>
+      </ul>`
+  },
+  {
+    emoji: '🧪',
+    title: 'Connectathon',
+    content: `
+      <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.75rem;">
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Encuentros internacionales donde los <strong>proveedores de software y hospitales</strong> prueban sus sistemas en escenarios reales.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Garantizan que los productos que dicen ser <strong>"compatibles con IHE"</strong> realmente funcionen en la práctica.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Es un <strong>sello de calidad y confiabilidad</strong> reconocido internacionalmente.</li>
+      </ul>`
+  },
+  {
+    emoji: '📂',
+    title: 'Dominios',
+    content: `
+      <p style="margin-bottom:.75rem;">IHE organiza sus perfiles en <strong>dominios especializados</strong>:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">
+        ${['🩻 Radiología','❤️ Cardiología','🔬 Laboratorio','🎗️ Oncología','💊 Dispositivos médicos','🖥️ Infraestructura TI'].map(d=>`<div style="background:#f0fdfa;border-radius:.6rem;padding:.5rem .75rem;font-size:.9rem;color:#0f2535;">${d}</div>`).join('')}
+      </div>
+      <p style="margin-top:.75rem;color:#475569;">Esto permite que <strong>cada área de la medicina</strong> tenga soluciones específicas de interoperabilidad.</p>`
+  },
+  {
+    emoji: '💡',
+    title: 'Beneficios',
+    content: `
+      <div style="display:flex;flex-direction:column;gap:.6rem;">
+        ${[
+          ['🧑‍⚕️','Pacientes','Acceso rápido y seguro a su información en cualquier institución.'],
+          ['👨‍⚕️','Médicos','Menos duplicación de estudios, mejor coordinación entre especialistas.'],
+          ['🏥','Hospitales','Integración de sistemas internos, reducción de costos y errores.'],
+          ['🏛️','Gobiernos','Base sólida para políticas de salud digital y sistemas nacionales de historia clínica.'],
+        ].map(([e,t,d])=>`
+          <div style="display:flex;gap:.75rem;align-items:flex-start;background:#f8fafc;border-radius:.75rem;padding:.75rem;">
+            <span style="font-size:1.5rem;flex-shrink:0">${e}</span>
+            <div><strong style="color:#0f2535;">${t}:</strong> <span style="color:#475569;">${d}</span></div>
+          </div>`).join('')}
+      </div>`
+  },
+  {
+    emoji: '🌍',
+    title: 'Colaboración Internacional',
+    content: `
+      <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.75rem;">
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Iniciativa global con participación de <strong>más de 650 organizaciones</strong> (hospitales, gobiernos, empresas tecnológicas).</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Tiene capítulos regionales: <strong>IHE Europe, IHE USA, IHE Japan</strong>, etc., que adaptan los perfiles a las necesidades locales.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Asegura que las soluciones sean <strong>aplicables en diferentes contextos</strong> de salud alrededor del mundo.</li>
+      </ul>`
+  },
+  {
+    emoji: '🔒',
+    title: 'Seguridad y Privacidad',
+    content: `
+      <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.75rem;">
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Los perfiles IHE incluyen mecanismos para <strong>proteger la información clínica</strong>: autenticación, autorización, cifrado.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Se alinean con regulaciones internacionales como <strong>GDPR</strong> en Europa o <strong>HIPAA</strong> en EE. UU.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Clave para garantizar <strong>confianza en el intercambio de datos</strong> entre instituciones.</li>
+      </ul>`
+  },
+  {
+    emoji: '📈',
+    title: 'Escalabilidad',
+    content: `
+      <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.75rem;">
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>IHE puede aplicarse tanto en un <strong>hospital pequeño</strong> como en un <strong>sistema nacional de salud</strong>.</li>
+        <li style="display:flex;gap:.75rem;align-items:flex-start;"><span style="color:#0d9488;flex-shrink:0">•</span>Los perfiles permiten crecer de manera <strong>modular</strong>: se pueden implementar algunos primero y luego ampliar según las necesidades.</li>
+      </ul>`
+  },
+];
+
+function openMindMap() {
+  document.getElementById('mindMapModal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closeMindMap() {
+  document.getElementById('mindMapModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function closeMindMapOutside(e) {
+  if (e.target === document.getElementById('mindMapModal')) closeMindMap();
+}
+
+function openNode(i) {
+  const n = NODES[i];
+  document.getElementById('nodeEmoji').textContent   = n.emoji;
+  document.getElementById('nodeTitle').textContent   = n.title;
+  document.getElementById('nodeContent').innerHTML   = n.content;
+  const modal = document.getElementById('nodeModal');
+  modal.classList.add('open');
+  modal.style.display = 'flex';
+}
+function closeNode() {
+  const modal = document.getElementById('nodeModal');
+  modal.classList.remove('open');
+  modal.style.display = 'none';
+}
+document.getElementById('nodeModal').addEventListener('click', function(e){
+  if(e.target === this) closeNode();
+});
+</script>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="py-12 px-6 text-center" style="background:var(--dark)">
+  <p class="text-slate-400 mb-2">Elaborado con fines educativos · 2025</p>
+  <p class="text-slate-500 text-sm mb-4">Fuentes: <a href="https://www.ihe.net" class="text-teal-400 hover:underline">ihe.net</a> · <a href="https://www.ops.int" class="text-teal-400 hover:underline">OPS/OMS</a> · Ministerio de Salud de Bolivia</p>
+  <div class="flex justify-center gap-6 text-sm text-slate-500">
+    <a href="#hero" class="hover:text-teal-400 transition">↑ Volver arriba</a>
+    <span>·</span>
+    <a href="https://www.ihe.net" target="_blank" class="hover:text-teal-400 transition">ihe.net oficial</a>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     SCROLL REVEAL
+══════════════════════════════════════ -->
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
